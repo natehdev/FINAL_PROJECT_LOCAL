@@ -26,8 +26,8 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import Logo from "./Logo";
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+// Add this import if DynamicSearchInput exists in your project
+import { DynamicSearchInput } from "@/components/dynamic-search-input";
 
 
 const navItems = [
@@ -132,72 +132,6 @@ const NavItem = ({ item }: { item: (typeof navItems)[0] }) => {
 };
 
 
-const DynamicSearchInput = () => {
-  const placeholders = [
-    "Fotolibros",
-    "Tazas personalizadas",
-    "Impresiones 10x15",
-    "Dibuñecos"
-  ];
-  const [inputValue, setInputValue] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(true);
-
-  const loopedPlaceholders = [...placeholders, placeholders[0]];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        if (prevIndex === placeholders.length) {
-          setIsTransitioning(false);
-          return 0;
-        }
-        return prevIndex + 1;
-      });
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [placeholders.length]);
-
-  useEffect(() => {
-    if (currentIndex === 0 && !isTransitioning) {
-       setTimeout(() => {
-        setIsTransitioning(true);
-        setCurrentIndex(1);
-      }, 50);
-    }
-  }, [currentIndex, isTransitioning]);
-
-  return (
-    <div className="relative flex-1 max-w-xl">
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground z-10" />
-      <Input
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        className="bg-gray-100 h-11 rounded-full w-full pl-12 pr-4"
-      />
-      {inputValue === "" && (
-        <div className="absolute inset-0 left-12 flex items-center pointer-events-none">
-          <div className="h-11 overflow-hidden">
-            <div
-              className={cn(
-                "ease-in-out",
-                isTransitioning ? "transition-transform duration-500" : ""
-              )}
-              style={{ transform: `translateY(-${currentIndex * 44}px)` }}
-            >
-              {loopedPlaceholders.map((text, index) => (
-                <div key={index} className="h-11 flex items-center text-muted-foreground">
-                  {text}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 
 export default function Header() {
